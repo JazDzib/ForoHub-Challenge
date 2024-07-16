@@ -1,4 +1,4 @@
-package com.AluraLatam.ForoHub.infra;
+package com.AluraLatam.ForoHub.infra.errores;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;

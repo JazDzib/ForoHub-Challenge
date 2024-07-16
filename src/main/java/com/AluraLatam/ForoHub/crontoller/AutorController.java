@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -17,12 +18,17 @@ import java.net.URI;
 public class AutorController {
 @Autowired
     private AutorRepository autorRepository;
+@Autowired
+private PasswordEncoder passwordEncoder;
 
 
     @PostMapping
     public ResponseEntity<DatosRespuestaAutor> registrarAutor(@RequestBody @Valid DatosRegistroAutor datoRegistroAutor, UriComponentsBuilder uriComponentsBuilder){
+        String contrasena= passwordEncoder.encode(datoRegistroAutor.contrasena());
         Autor autor= autorRepository.save(new Autor(datoRegistroAutor));
-        //return  ResponseEntity.ok(new DatosRespuestaAutor(autor));
+        autor.setContrasena(contrasena);
+        autorRepository.save(autor);
+
         URI url = uriComponentsBuilder.path("/autores/{id}").buildAndExpand(autor.getId()).toUri();
         return ResponseEntity.created(url).body(new DatosRespuestaAutor(autor));
     }
